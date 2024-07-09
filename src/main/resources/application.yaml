@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: CarWashingApp
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/maxima
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+    hibernate:
+      ddl-auto: update
