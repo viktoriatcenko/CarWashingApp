@@ -1,10 +1,11 @@
 package ru.car.washing.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
+@Data
 @Entity
 @Table(name = "Box")
 public class Box {
@@ -15,6 +16,10 @@ public class Box {
     @Column(name = "number")
     private Integer number;
 
-    @Column(name = "slots")
-    private Map<Date,List<Service>> slots;
+    @OneToMany(mappedBy = "box")
+    private List<Offer> slots;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private Person owner;
 }
