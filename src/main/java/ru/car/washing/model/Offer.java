@@ -13,6 +13,7 @@ public class Offer {
     @Column(name = "id")
     private Long id;
 
+    // 15.04.2021-12:00:00
     @Column(name = "hour_of_start")
     private String hourOfStart;
 
