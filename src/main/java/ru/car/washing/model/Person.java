@@ -37,7 +37,7 @@ public class Person {
     @Column(name = "can_give_discount")
     private Boolean isAbleToMakeDiscount;
 
-    @Column(name = "removed")
+    @Column(name = "removed", nullable = false)
     private Boolean isRemoved;
 
     @Column(name = "password")

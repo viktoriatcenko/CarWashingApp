@@ -22,9 +22,9 @@ public class ScheduleUtil {
         this.offerRepository = offerRepository;
     }
 
-    @Scheduled(initialDelay = 3000)
-    public void test() {
-        String date = LocalDateTime.now().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        var list = offerRepository.findByHourOfStartStartingWith(date);
-    }
+//    @Scheduled(initialDelay = 3000)
+//    public void test() {
+//        String date = LocalDateTime.now().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+//        var list = offerRepository.findByHourOfStartStartingWith(date);
+//    }
 }
