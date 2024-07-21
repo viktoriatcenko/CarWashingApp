@@ -1,13 +1,10 @@
 package ru.car.washing.controller;
 
-import org.apache.coyote.Response;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.car.washing.model.Offer;
 import ru.car.washing.services.OfferService;
@@ -34,9 +31,24 @@ public class OfferController {
         return ResponseEntity.ok(offers);
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/edit/{id}")
     public Offer getOfferById(@PathVariable("id") Long id) {
         Offer offer = offerService.getOffer(id);
         return offer;
     }
+
+    @PostMapping("/book")
+    public ResponseEntity<Offer> createOffer(@RequestBody Offer offer) {
+        Offer newOffer = offerService.createOffer(offer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOffer);
+    }
+
+//    @DeleteMapping("/unbook/{id}")
+//    public ResponseEntity<Response> deleteOffer(@PathVariable("id") Long id) {
+//        if (offerService.safeDeleteOffer(id)) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+//                    "Неверно заданный id для удаления");
+//        }
+//        return ResponseEntity.accepted().build();
+//    }
 }

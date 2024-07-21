@@ -1,5 +1,6 @@
 package ru.car.washing.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -37,6 +38,7 @@ public class Offer {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "box_id", referencedColumnName = "id")
+    @JsonIgnore
     private Box box;
 
 }
