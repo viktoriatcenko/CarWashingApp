@@ -20,6 +20,7 @@ public class Person {
     private String name;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "owner")
