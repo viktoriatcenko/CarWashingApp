@@ -1,5 +1,18 @@
 package ru.car.washing.model;
 
 public enum Role {
-    USER, ADMINISTRATOR, OPERATOR, ANONYMOUS_USER
+
+    ROLE_USER("Пользователь"),
+    ROLE_ADMINISTRATOR("Администратор"),
+    ROLE_OPERATOR("Оператор"),
+    ROLE_ANONYMOUS_USER("Анонимный пользователь");
+    private String title;
+
+    Role(String title) {
+        this.title = title;
+    }
+    @Override
+    public String toString() {
+        return title;
+    }
 }
