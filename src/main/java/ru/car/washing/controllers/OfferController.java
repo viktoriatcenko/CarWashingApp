@@ -1,4 +1,4 @@
-package ru.car.washing.controller;
+package ru.car.washing.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

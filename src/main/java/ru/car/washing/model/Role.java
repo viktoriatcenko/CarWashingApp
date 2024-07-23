@@ -4,8 +4,7 @@ public enum Role {
 
     ROLE_USER("Пользователь"),
     ROLE_ADMINISTRATOR("Администратор"),
-    ROLE_OPERATOR("Оператор"),
-    ROLE_ANONYMOUS_USER("Анонимный пользователь");
+    ROLE_OPERATOR("Оператор");
     private String title;
 
     Role(String title) {
