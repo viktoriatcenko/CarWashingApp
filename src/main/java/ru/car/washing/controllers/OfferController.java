@@ -4,20 +4,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import ru.car.washing.model.Box;
 import ru.car.washing.model.Offer;
+import ru.car.washing.model.Person;
 import ru.car.washing.services.OfferService;
+import ru.car.washing.services.PersonService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping
 public class OfferController {
 
     private final OfferService offerService;
+    private final PersonService personService;
 
     @Autowired
-    public OfferController(OfferService offerService) {
+    public OfferController(OfferService offerService, PersonService personService) {
         this.offerService = offerService;
+        this.personService = personService;
     }
 
     @GetMapping("/bookings")
@@ -29,9 +38,9 @@ public class OfferController {
         return ResponseEntity.ok(offers);
     }
 
-    @GetMapping("/edit/{id}")
-    public Offer getOfferById(@PathVariable("id") Long id) {
-        Offer offer = offerService.getOffer(id);
+    @PostMapping("/edit/{id}")
+    public Offer getOfferById(@PathVariable("id") Long id, @RequestBody Offer offer) {
+        offerService.updateOffer(id, offer);
         return offer;
     }
 
@@ -41,12 +50,32 @@ public class OfferController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newOffer);
     }
 
-//    @DeleteMapping("/unbook/{id}")
-//    public ResponseEntity<Response> deleteOffer(@PathVariable("id") Long id) {
-//        if (offerService.safeDeleteOffer(id)) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-//                    "Неверно заданный id для удаления");
-//        }
-//        return ResponseEntity.accepted().build();
-//    }
+    @PostMapping("/unbook/{id}")
+    public ResponseEntity<String> deleteOffer(@PathVariable("id") Long id) {
+        if (!offerService.safeDeleteOffer(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Неверно заданный id для удаления");
+        }
+        return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/services/{id}")
+    public ResponseEntity<List<Offer>> getAllRealizedOffers(@PathVariable("id") Long id) {
+        Person person = personService.findById(id);
+        List<Offer> offers = new ArrayList<>();
+//        List<Stream<Offer>> collect = person.getReservedBoxes().stream()
+//                .map(box -> box.getSlots().stream().filter(Offer::getIsOfferRealized))
+//                .collect(Collectors.toList());
+        for (Box box : person.getReservedBoxes()) {
+            box.getSlots().forEach(offer -> {
+                if (offer.getIsOfferRealized()) {
+                    offers.add(offer);
+                }
+            });
+        }
+
+        return ResponseEntity.ok(offers);
+    }
+
+
 }

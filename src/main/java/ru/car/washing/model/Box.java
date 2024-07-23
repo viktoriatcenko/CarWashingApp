@@ -23,4 +23,12 @@ public class Box {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Person owner;
+
+    @Override
+    public String toString() {
+        return "Box{" +
+                "id=" + id +
+                ", number=" + number +
+                '}';
+    }
 }

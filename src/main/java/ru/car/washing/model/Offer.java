@@ -30,6 +30,9 @@ public class Offer {
     @Column(name = "is_confirmed")
     private Boolean isConfirmed;
 
+    @Column(name = "is_booked")
+    private Boolean isBooked;
+
     @Column(name = "discount_min")
     private Integer discountMin;
 
@@ -41,4 +44,17 @@ public class Offer {
     @JsonIgnore
     private Box box;
 
+    @Override
+    public String toString() {
+        return "Offer{" +
+                "id=" + id +
+                ", hourOfStart='" + hourOfStart + '\'' +
+                ", cost=" + cost +
+                ", name='" + name + '\'' +
+                ", isOfferRealized=" + isOfferRealized +
+                ", isConfirmed=" + isConfirmed +
+                ", isBooked=" + isBooked +
+                ", discountMin=" + discountMin +
+                ", discountMax=" + discountMax;
+    }
 }

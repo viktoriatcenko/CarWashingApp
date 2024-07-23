@@ -8,6 +8,7 @@ import ru.car.washing.model.Offer;
 import ru.car.washing.repositories.OfferRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OfferService {
@@ -34,24 +35,28 @@ public class OfferService {
         return offerRepository.save(offer);
     }
 
-    public Offer updateOffer(Long id, Offer offer) {
+    public void updateOffer(Long id, Offer offer) {
         Offer oldOffer = offerRepository.findById(id).orElse(null);
-        if (oldOffer != null) {
-            offer.setId(id);
-
+        Optional<Offer> byHourOfStartEndingWith = offerRepository.findByHourOfStartEndingWith(offer.getHourOfStart());
+        if (byHourOfStartEndingWith.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "В базе еще нет окна с таким временем");
+        } else if (oldOffer != null && !oldOffer.getIsBooked()) {
+            oldOffer.setHourOfStart(offer.getHourOfStart());
+            oldOffer.setName(offer.getName());
+            offerRepository.save(oldOffer);
         }
-        return offerRepository.save(offer);
     }
 
-//    public Boolean safeDeleteOffer(Long id) {
-//        Offer offer = offerRepository.findOffersByIdAndIsConfirmedIsTrue(id).orElse(null);
-//        if (offer != null) {
-//            offer.setIsConfirmed(true);
-//            offerRepository.save(offer);
-//            return false;
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-//                    "В базе нет заказа с таким ID");
-//        }
-//    }
+    public boolean safeDeleteOffer(Long id) {
+        Offer offer = offerRepository.findById(id).orElse(null);
+        if (offer != null) {
+            offer.setIsConfirmed(false);
+            offerRepository.save(offer);
+            return true;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "В базе нет заказа с таким ID");
+        }
+    }
 }

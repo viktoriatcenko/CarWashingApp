@@ -27,4 +27,5 @@ public class ScheduleUtil {
 //        String date = LocalDateTime.now().toLocalDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 //        var list = offerRepository.findByHourOfStartStartingWith(date);
 //    }
+
 }

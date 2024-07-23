@@ -21,10 +21,8 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    @PostConstruct
-    public void onStart() {
-        Person person = new Person();
-        person.setName("Name");
+    public Person findById(Long id) {
+        return personRepository.findById(id).orElse(null);
     }
 
     @Transactional

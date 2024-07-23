@@ -44,5 +44,18 @@ public class Person {
     @Column(name = "password")
     private String password;
 
-
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                ", createdBy='" + createdBy + '\'' +
+                ", deletedAt=" + deletedAt +
+                ", isAbleToMakeDiscount=" + isAbleToMakeDiscount +
+                ", isRemoved=" + isRemoved +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
