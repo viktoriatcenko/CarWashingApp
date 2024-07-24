@@ -41,9 +41,11 @@ public class OfferService {
         if (byHourOfStartEndingWith.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "В базе еще нет окна с таким временем");
-        } else if (oldOffer != null && !oldOffer.getIsBooked()) {
+        } else if (oldOffer != null && !byHourOfStartEndingWith.get().getIsBooked()) {
             oldOffer.setHourOfStart(offer.getHourOfStart());
             oldOffer.setName(offer.getName());
+            offer.setIsBooked(false);
+            offerRepository.save(offer);
             offerRepository.save(oldOffer);
         }
     }
