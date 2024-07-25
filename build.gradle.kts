@@ -47,6 +47,6 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-flyway {
+ flyway {
     url = "jdbc:postgresql://localhost:5432/postgres"
 }

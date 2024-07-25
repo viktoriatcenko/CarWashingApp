@@ -1,5 +1,6 @@
 package ru.car.washing.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +18,7 @@ public class Box {
     @Column(name = "number")
     private Integer number;
 
-    @OneToMany(mappedBy = "box")
+    @ManyToMany
     private List<Offer> slots;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

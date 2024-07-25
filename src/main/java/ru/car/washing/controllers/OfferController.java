@@ -14,7 +14,6 @@ import ru.car.washing.services.PersonService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping
@@ -77,5 +76,14 @@ public class OfferController {
         return ResponseEntity.ok(offers);
     }
 
-
+    @GetMapping("/all-services")
+    public ResponseEntity<List<String>> getAllOffersByName() {
+        List<String> offers = offerService.getAllOffers().stream()
+                .map(Offer::getName)
+                .collect(Collectors.toList());
+        if (offers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(offers);
+    }
 }
