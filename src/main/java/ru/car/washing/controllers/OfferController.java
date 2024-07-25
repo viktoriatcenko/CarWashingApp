@@ -51,10 +51,10 @@ public class OfferController {
 
     @PostMapping("/unbook/{id}")
     public ResponseEntity<String> deleteOffer(@PathVariable("id") Long id) {
-        if (!offerService.safeDeleteOffer(id)) {
+        /*if (!offerService.safeDeleteOffer(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Неверно заданный id для удаления");
-        }
+        }*/
         return ResponseEntity.accepted().build();
     }
 
