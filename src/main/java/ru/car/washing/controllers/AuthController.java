@@ -59,7 +59,7 @@ public class AuthController {
         return Map.of("jwt-token", token);
     }
 
-    @PostMapping("/resset-password")
+    @PostMapping("/reset-password")
     public ResponseEntity<HttpStatus> resetPassword(@RequestBody AuthDTO authDTO) {
         personService.resetPassword(authDTO);
         if (authDTO.getName() == null || authDTO.getPassword() == null) {
