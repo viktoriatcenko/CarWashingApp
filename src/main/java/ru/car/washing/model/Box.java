@@ -18,7 +18,7 @@ public class Box {
     @Column(name = "number")
     private Integer number;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "box")
     private List<Offer> slots;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
