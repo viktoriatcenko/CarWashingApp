@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.car.washing.dto.OfferDTO;
+import ru.car.washing.dto.PersonDTO;
 import ru.car.washing.model.Box;
 import ru.car.washing.model.Offer;
 import ru.car.washing.model.Person;

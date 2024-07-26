@@ -2,6 +2,7 @@ package ru.car.washing.services;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.car.washing.model.Person;
@@ -15,10 +16,12 @@ import java.util.Date;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, ModelMapper modelMapper) {
         this.personRepository = personRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Person findById(Long id) {
