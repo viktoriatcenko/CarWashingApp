@@ -5,12 +5,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.car.washing.dto.AuthDTO;
 import ru.car.washing.dto.PersonDTO;
 import ru.car.washing.model.Person;
 import ru.car.washing.model.Role;
 import ru.car.washing.repositories.PersonRepository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -34,6 +36,13 @@ public class PersonService {
     public void save(Person person) {
         enrich(person);
         personRepository.save(person);
+    }
+    @Transactional
+    public JW login(AuthDTO authDTO) {
+        Person person = personRepository.findByName(authDTO.getName()).orElse(null);
+
+
+
     }
 
     private void enrich(Person p) {

@@ -3,7 +3,7 @@ spring:
     name: CarWashingApp
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/database_name
     username: postgres
     password: postgres
   jpa:

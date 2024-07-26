@@ -37,13 +37,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         (s) ->
                                 s.requestMatchers("/login", "/registration", "/error").permitAll()
-                                        .anyRequest().authenticated())
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                                        .anyRequest().authenticated());
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -53,11 +56,6 @@ public class SecurityConfig {
                 .userDetailsService(personDetailsService)
                 .passwordEncoder(getPasswordEncoder())
                 .and().build();
-    }
-
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

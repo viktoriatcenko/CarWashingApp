@@ -3,8 +3,15 @@ package ru.car.washing.controllers;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ru.car.washing.dto.AuthDTO;
+import ru.car.washing.exceptions.PersonNotCreatedException;
 import ru.car.washing.services.PersonService;
 import ru.car.washing.validation.PersonValidator;
 import ru.car.washing.dto.PersonDTO;
@@ -12,6 +19,7 @@ import ru.car.washing.model.Person;
 import ru.car.washing.util.JWTUtil;
 
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,40 +27,53 @@ import java.util.Map;
 public class AuthController {
 
     private final PersonService personService;
+    private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final ModelMapper mapper;
-    private final PersonValidator personValidator;
-
 
     @Autowired
-    public AuthController(PersonService personService, JWTUtil jwtUtil, ModelMapper mapper, PersonValidator personValidator) {
+    public AuthController(PersonService personService, AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         this.personService = personService;
+        this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.mapper = mapper;
-        this.personValidator = personValidator;
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "successfully login";
     }
 
     @PostMapping("/registration")
-    public Map<String, String> registration(@RequestBody @Valid  PersonDTO personDTO,
-                            BindingResult bindingResult) {
-
-        Person person = personService.convertFromDTOToPerson(personDTO);
-
-        personValidator.validate(person, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            return Map.of("message", "error body");
-        }
-
+    public ResponseEntity<HttpStatus> savePerson(@RequestBody @Valid Person person,
+                                                 BindingResult bindingResult) {
+        checkForErrors(bindingResult);
         personService.save(person);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
-        String token = jwtUtil.generateToken(person.getName());
-
+    @PostMapping("/login")
+    public Map<String, String> login(@RequestBody AuthDTO authDTO) {
+        UsernamePasswordAuthenticationToken userToken =
+                new UsernamePasswordAuthenticationToken(
+                        authDTO.getName(), authDTO.getPassword());
+        try {
+            authenticationManager.authenticate(userToken);
+        } catch (Exception e) {
+            return Map.of("error", "incorrect login or password");
+        }
+        String token = jwtUtil.generateToken(authDTO.getName());
         return Map.of("jwt-token", token);
+    }
+
+
+    private void checkForErrors(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for (FieldError fieldError :
+                    fieldErrors) {
+                stringBuilder.append(fieldError.getField())
+                        .append(" - ")
+                        .append(fieldError.getDefaultMessage())
+                        .append(";");
+            }
+
+            throw new PersonNotCreatedException(stringBuilder.toString());
+        }
     }
 }
