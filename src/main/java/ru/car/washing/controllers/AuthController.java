@@ -59,6 +59,17 @@ public class AuthController {
         return Map.of("jwt-token", token);
     }
 
+    @PostMapping("/resset-password")
+    public ResponseEntity<HttpStatus> resetPassword(@RequestBody AuthDTO authDTO) {
+        personService.resetPassword(authDTO);
+        if (authDTO.getName() == null || authDTO.getPassword() == null) {
+            return (ResponseEntity<HttpStatus>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+        } else if(!personService.isUserExists(authDTO.getName())){
+            return (ResponseEntity<HttpStatus>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
     private void checkForErrors(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

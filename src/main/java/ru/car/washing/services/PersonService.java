@@ -31,18 +31,14 @@ public class PersonService {
     public Person findById(Long id) {
         return personRepository.findById(id).orElse(null);
     }
+    public Boolean isUserExists(String name) {
+        return personRepository.findByName(name).isPresent();
+    }
 
     @Transactional
     public void save(Person person) {
         enrich(person);
         personRepository.save(person);
-    }
-    @Transactional
-    public JW login(AuthDTO authDTO) {
-        Person person = personRepository.findByName(authDTO.getName()).orElse(null);
-
-
-
     }
 
     private void enrich(Person p) {
@@ -63,4 +59,8 @@ public class PersonService {
         return person;
     }
 
+    public void resetPassword(AuthDTO authDTO) {
+        Person person = personRepository.findByName(authDTO.getName()).orElse(null);
+        person.setPassword(passwordEncoder.encode(authDTO.getPassword()));
+    }
 }

@@ -36,7 +36,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         (s) ->
-                                s.requestMatchers("/login", "/registration", "/error").permitAll()
+                                s.requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -50,12 +50,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http)
-            throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(personDetailsService)
-                .passwordEncoder(getPasswordEncoder())
-                .and().build();
+                .passwordEncoder(getPasswordEncoder()).and()
+                .build();
     }
-
 }
