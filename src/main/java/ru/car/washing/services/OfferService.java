@@ -1,9 +1,11 @@
 package ru.car.washing.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.car.washing.dto.OfferDTO;
 import ru.car.washing.model.Offer;
 import ru.car.washing.repositories.OfferRepository;
 
@@ -14,11 +16,13 @@ import java.util.Optional;
 public class OfferService {
 
     private final OfferRepository offerRepository;
+    private final ModelMapper modelMapper;
 
 
     @Autowired
-    public OfferService(OfferRepository offerRepository) {
+    public OfferService(OfferRepository offerRepository, ModelMapper modelMapper) {
         this.offerRepository = offerRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Offer getOffer(Long id) {
@@ -26,12 +30,15 @@ public class OfferService {
         return offer;
     }
 
-    public List<Offer> getAllOffers() {
+    public List<OfferDTO> getAllOffers() {
         List<Offer> offers = offerRepository.findAll();
-        return offers;
+        List<OfferDTO> offerDTOS = offers.stream()
+                .map(offer -> modelMapper.map(offer, OfferDTO.class)).toList();
+        return offerDTOS;
     }
 
-    public Offer createOffer(Offer offer) {
+    public Offer createOffer(OfferDTO offerDto) {
+        Offer offer = convertFromOfferDTOToOffer(offerDto);
         return offerRepository.save(offer);
     }
 
@@ -60,5 +67,22 @@ public class OfferService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "В базе нет заказа с таким ID");
         }
+    }
+
+    public OfferDTO convertToOfferDTO(Offer offer) {
+        return modelMapper.map(offer, OfferDTO.class);
+    }
+
+    public Offer convertFromOfferDTOToOffer(OfferDTO offerDTO) {
+        final Offer mapoffer = modelMapper.map(offerDTO, Offer.class);
+        enrich(mapoffer);
+        return mapoffer;
+    }
+
+    private void enrich(Offer offer) {
+    offer.setIsBooked(true);
+    offer.setIsOfferRealized(false);
+    offer.setDiscountMin(2);
+    offer.setDiscountMax(10);
     }
 }

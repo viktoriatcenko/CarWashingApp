@@ -18,4 +18,5 @@ public class CarWashingAppApplication {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
 }

@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.car.washing.dto.OfferDTO;
+import ru.car.washing.dto.PersonDTO;
 import ru.car.washing.model.Box;
 import ru.car.washing.model.Offer;
 import ru.car.washing.model.Person;
@@ -14,6 +16,7 @@ import ru.car.washing.services.PersonService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping
@@ -29,8 +32,8 @@ public class OfferController {
     }
 
     @GetMapping("/bookings")
-    public ResponseEntity<List<Offer>> getAllOffers() {
-        List<Offer> offers = offerService.getAllOffers();
+    public ResponseEntity<List<OfferDTO>> getAllOffers() {
+        List<OfferDTO> offers = offerService.getAllOffers();
         if (offers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -44,8 +47,8 @@ public class OfferController {
     }
 
     @PostMapping("/book")
-    public ResponseEntity<Offer> createOffer(@RequestBody Offer offer) {
-        Offer newOffer = offerService.createOffer(offer);
+    public ResponseEntity<Offer> createOffer(@RequestBody OfferDTO offerDTO) {
+        Offer newOffer = offerService.createOffer(offerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newOffer);
     }
 
@@ -62,6 +65,9 @@ public class OfferController {
     public ResponseEntity<List<Offer>> getAllRealizedOffers(@PathVariable("id") Long id) {
         Person person = personService.findById(id);
         List<Offer> offers = new ArrayList<>();
+//        offers.stream()
+//                .filter(Offer::getIsOfferRealized)
+//                .forEach(offers::add);
 //        List<Stream<Offer>> collect = person.getReservedBoxes().stream()
 //                .map(box -> box.getSlots().stream().filter(Offer::getIsOfferRealized))
 //                .collect(Collectors.toList());
@@ -79,7 +85,7 @@ public class OfferController {
     @GetMapping("/all-services")
     public ResponseEntity<List<String>> getAllOffersByName() {
         List<String> offers = offerService.getAllOffers().stream()
-                .map(Offer::getName)
+                .map(OfferDTO::getName)
                 .collect(Collectors.toList());
         if (offers.isEmpty()) {
             return ResponseEntity.noContent().build();
